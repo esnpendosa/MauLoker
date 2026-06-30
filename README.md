@@ -2,7 +2,7 @@
 
 [![Framework](https://img.shields.io/badge/Laravel-12.x-red.svg)](https://laravel.com)
 [![Livewire](https://img.shields.io/badge/Livewire-3.x-blue.svg)](https://livewire.laravel.com)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-Non--Commercial-orange.svg)](LICENSE)
 
 **MauLoker** adalah platform pencarian kerja Indonesia modern yang ringan, SEO friendly, mobile-first, dan dioptimalkan secara penuh untuk target *shared hosting* (seperti Hostinger Business Web Hosting) tanpa ketergantungan pada Node.js, Docker, Redis, atau VPS.
 
@@ -90,18 +90,8 @@
 
 ---
 
-## 👥 Kontributor & Kolaborasi
-
-### Apakah platform ini memerlukan kontributor?
-**Tentu saja!** Membuka ruang bagi kontributor (kontribusi open-source) sangat baik untuk mempercepat pengembangan fitur-fitur baru (seperti integrasi WhatsApp Gateway, Payment Gateway untuk lowongan premium, dll.). 
-
-Jika Anda tertarik untuk berpartisipasi:
-1. Fork repositori ini.
-2. Buat branch baru (`feature/fitur-baru`).
-3. Kirim Pull Request (PR) untuk direview.
-
----
-
 ## 📄 Lisensi
 
-Platform ini dirilis di bawah lisensi [MIT License](LICENSE). Anda bebas menyalin, memodifikasi, dan menyebarluaskannya secara gratis.
+Platform ini dirilis di bawah **Lisensi Non-Komersial MauLoker (MauLoker Non-Commercial License)**. Anda diperbolehkan menggunakan, mempelajari, dan memodifikasi proyek ini hanya untuk kepentingan pembelajaran, akademis, atau penggunaan pribadi secara **non-komersial**. 
+
+Dilarang keras memperjualbelikan ulang software ini atau meng-host software ini sebagai layanan berbayar (SaaS/Sistem Informasi Komersial) tanpa izin tertulis dari pemegang hak cipta. Selengkapnya lihat berkas [LICENSE](LICENSE).
