@@ -1,0 +1,21 @@
+{
+  "name": "MauLoker Job Portal",
+  "short_name": "MauLoker",
+  "start_url": "/",
+  "background_color": "#0B1220",
+  "theme_color": "#10B981",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/color/192/000000/find-matching-job.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://img.icons8.com/color/512/000000/find-matching-job.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
