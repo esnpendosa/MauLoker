@@ -10,26 +10,53 @@
 
 ---
 
-## 🚀 Fitur Utama
+## 🚀 Fitur Lengkap Platform
 
-1. **Pencarian Lowongan Canggih (Job Search):**
-   * Filter pencarian dinamis (lokasi, rentang gaji, pengalaman, dan kategori industri).
-   * URL SEO friendly dengan query strings yang terindeks robot perayap mesin pencari.
-2. **Sistem Onboarding & Autentikasi Peran:**
-   * Registrasi dan Login dinamis menggunakan Spatie Permissions (Candidate vs Company).
-3. **Dashboard Pelamar (Candidate Dashboard):**
-   * Unggah CV PDF dan parser ATS otomatis menggunakan `Smalot PDFParser` & `MatchEngineService`.
-   * Unduh CV ke PDF menggunakan `Barryvdh DomPDF`.
-   * Pelacak lamaran kerja dengan penanda proses (*stepper*).
-4. **Dashboard Perusahaan (Company Dashboard):**
-   * Kelola lowongan (CRUD), kelola pelamar, dan ubah status lamaran secara real-time.
-5. **Real-time Chat (AJAX Polling):**
-   * Komunikasi langsung antara pelamar dan perusahaan menggunakan AJAX Polling Livewire 3 (tanpa WebSockets/Pusher).
-6. **Panel Administrator (Admin Panel):**
-   * Kelola pengguna, verifikasi perusahaan, rekomendasikan lowongan, dan buat spot iklan.
-   * **Dynamic Theme Customizer:** Ubah skema warna global (primary, hover, dark mode bg) langsung dari database.
-7. **PWA & Offline Reliability:**
-   * Instalasi instan di handphone/desktop dengan Service Worker (`sw.js`) dan halaman fallback offline statis.
+### 1. 🏠 Halaman Utama (Homepage) yang Interaktif
+* **Statistik Dinamis:** Menampilkan counter real-time (Lowongan Aktif, Perusahaan Terdaftar, Kandidat Terverifikasi, dan Lamaran Terproses).
+* **Rekomendasi Lowongan (Featured Jobs):** Grid lowongan unggulan yang telah ditandai oleh administrator.
+* **Riset Gaji (Salary Benchmarks):** Informasi rentang gaji rata-rata untuk berbagai kategori profesi (Software Engineer, Designer, Product Manager, Marketing, dll).
+* **Peta Karir (Career Roadmap):** Panduan langkah demi langkah (Junior -> Middle -> Senior) untuk membimbing pencari kerja.
+* **Kategori Lowongan Populer:** Pintasan pencarian berdasarkan industri (Teknologi, Finansial, Media, Konstruksi, dll).
+
+### 2. 🔍 Sistem Pencarian Kerja yang Cepat & SEO Friendly
+* **Filter Mutakhir:** Cari berdasarkan lokasi kota, kategori, pengalaman minimum, serta ekspektasi gaji minimum/maksimum.
+* **Live Query Binding:** Pencarian dinamis menggunakan model binding Livewire 3 yang terintegrasi ke URL query string (memudahkan robot perayap Google mengindeks halaman pencarian).
+* **Ad Integration:** Banner iklan Google AdSense terintegrasi di sidebar pencarian untuk memaksimalkan monetisasi.
+
+### 3. 🎯 Match Score Engine & Pengiriman Lamaran (Job Detail)
+* **Match Score Engine:** Menghitung persentase kecocokan kualifikasi lowongan dengan CV/Profil kandidat secara instan (berdasarkan kecocokan keterampilan, pendidikan, dan pengalaman kerja).
+* **Modal Lamar Cepat:** Pelamar dapat mengunggah file CV berformat PDF langsung ke database lowongan.
+
+### 4. 👤 Sistem Autentikasi Pengguna & Onboarding Multi-Peran
+* **Registrasi & Login Terpadu:** Pengalihan antarmuka otomatis setelah login berdasarkan peran yang didefinisikan oleh Spatie Permissions:
+  * **Candidate (Kandidat/Pencari Kerja)**
+  * **Company (Perekrut/Perusahaan)**
+  * **Admin (Pengelola Platform)**
+
+### 5. 💼 Dashboard Kandidat (Candidate Control Center)
+* **ATS Resume Checker:** Pengunggah CV PDF yang dilengkapi dengan parser teks otomatis (`Smalot PDFParser`) untuk menilai kecocokan CV dengan standar sistem ATS (*Applicant Tracking System*).
+* **Ekspor CV ke PDF (DomPDF):** Unduh profil digital pelamar dalam bentuk dokumen PDF siap cetak dengan pilihan template profesional (Classic ATS & Modern Professional).
+* **Tracker Lamaran (Application Stepper):** Lacak status lamaran kerja melalui indikator proses visual:
+  * `Terkirim` ➡️ `Direview` ➡️ `Wawancara` ➡️ `Diterima` / `Ditolak`
+
+### 6. 🏢 Dashboard Perusahaan (Recruiter Panel)
+* **CRUD Lowongan:** Posting, edit, dan hapus lowongan kerja secara mandiri.
+* **Applicant Pipeline Management:** Tinjau CV kandidat, jalankan kalkulator kecocokan nilai ATS, dan ubah status lamaran (misalnya mengundang interview atau menolak pelamar) secara instan.
+* **Profil Perusahaan:** Manajemen logo, skala bisnis, kategori industri, dan peta lokasi.
+
+### 7. 💬 Sistem Pesan Real-time (Chat Module)
+* **AJAX Polling Chat:** Komunikasi dua arah antara pelamar dan perekrut tanpa membutuhkan server Socket eksternal atau Pusher (menggunakan polling Livewire 3 detik).
+* **Interaktif Sidebar:** Daftar obrolan aktif dengan indikator unread message count dan cuplikan waktu pesan terakhir (*diffForHumans*).
+
+### 8. 🛡️ Dashboard Administrator (Admin Panel)
+* **Verifikasi Perusahaan:** Setujui atau batalkan verifikasi pendaftaran perusahaan baru sebelum mereka dapat memposting lowongan.
+* **Manajemen Iklan:** Tempatkan banner custom HTML atau script iklan Google AdSense pada posisi header, sidebar, atau footer secara dinamis.
+* **Dynamic Theme Editor:** Pengubah nilai variabel warna utama branding (`--primary`, `--primary-hover`, `--dark-bg`, dll) dan radius sudut element (`border-radius`) secara dinamis langsung dari database.
+
+### 9. 📱 PWA & Kemandirian Offline
+* **Instalasi PWA:** Dukungan penuh Manifest dan Service Worker sehingga website dapat diinstal di Android/iOS dan Desktop.
+* **Offline Reliability:** Halaman fallback offline kustom yang ramah pengguna apabila koneksi internet terputus.
 
 ---
 
