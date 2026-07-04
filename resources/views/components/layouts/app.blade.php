@@ -424,6 +424,9 @@
                     <li><a href="/user-agreement" class="hover:text-primary transition">User Agreement</a></li>
                     <li><a href="/privacy-policy" class="hover:text-primary transition">Privacy Policy</a></li>
                     <li><a href="/terms-of-service" class="hover:text-primary transition">Terms of Service</a></li>
+                    <li><a href="/disclaimer" class="hover:text-primary transition">Disclaimer</a></li>
+                    <li><a href="/anti-fraud" class="hover:text-primary transition">Anti-Fraud Policy</a></li>
+                    <li><a href="/community-guidelines" class="hover:text-primary transition">Community Guidelines</a></li>
                 </ul>
             </div>
 

@@ -30,6 +30,9 @@ Route::get('/blog/{slug}', Blog::class)->name('blog.detail');
 Route::get('/user-agreement', LegalPage::class)->defaults('type', 'user-agreement')->name('user-agreement');
 Route::get('/privacy-policy', LegalPage::class)->defaults('type', 'privacy-policy')->name('privacy-policy');
 Route::get('/terms-of-service', LegalPage::class)->defaults('type', 'terms-of-service')->name('terms-of-service');
+Route::get('/disclaimer', LegalPage::class)->defaults('type', 'disclaimer')->name('disclaimer');
+Route::get('/anti-fraud', LegalPage::class)->defaults('type', 'anti-fraud')->name('anti-fraud');
+Route::get('/community-guidelines', LegalPage::class)->defaults('type', 'community-guidelines')->name('community-guidelines');
 
 // Guest Authentication Routes
 Route::middleware('guest')->group(function () {
