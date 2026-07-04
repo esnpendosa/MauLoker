@@ -391,7 +391,7 @@
                     </span>
                 </div>
                 <p class="text-sm text-slate-500 dark:text-slate-400 max-w-sm">
-                    MauLoker adalah portal lowongan kerja halal dan profesional untuk masyarakat Indonesia. Menghubungkan pencari kerja dengan perusahaan-perusahaan terpercaya di seluruh nusantara.
+                    MauLoker adalah portal lowongan kerja profesional yang berkomitmen pada praktik rekrutmen yang legal dan etis. Menghubungkan pencari kerja dengan pemberi kerja tepercaya di seluruh Indonesia.
                 </p>
                 <div class="mt-4 flex items-center gap-3">
                     <a href="#" class="text-slate-400 hover:text-primary transition" aria-label="Facebook">
@@ -441,10 +441,9 @@
                 </ul>
             </div>
         </div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 dark:border-slate-800 mt-8 pt-8 text-center text-xs text-slate-500 space-y-2">
-            <p>&copy; {{ date('Y') }} <strong>MauLoker</strong>. Portal Kerja Impianmu &amp; Profesional untuk Indonesia. &#9825;</p>
-            <p class="text-[10px] text-slate-400 dark:text-slate-500 max-w-2xl mx-auto leading-relaxed">
-                Pernyataan Penting: MauLoker adalah platform komunitas independen non-komersial, bukan badan usaha (bukan PT/CV). Layanan ini 100% gratis. Segala bentuk komunikasi dan hubungan kerja menjadi tanggung jawab pribadi masing-masing pencari kerja dan pemberi kerja secara mandiri.
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 dark:border-slate-800 mt-8 pt-8 text-center text-xs text-slate-500">
+            <p class="text-[10px] text-slate-400 dark:text-slate-500 max-w-4xl mx-auto leading-relaxed">
+                &copy; {{ date('Y') }} <strong>MauLoker</strong>. Platform komunitas lowongan kerja independen dan non-komersial. MauLoker bukan perusahaan penyalur tenaga kerja maupun agen rekrutmen resmi. Seluruh proses perekrutan, komunikasi, dan hubungan kerja sepenuhnya merupakan tanggung jawab pengguna masing-masing. Pengguna diwajibkan melakukan verifikasi mandiri terhadap setiap informasi lowongan kerja dan pihak perekrut sesuai peraturan perundang-undangan Republik Indonesia.
             </p>
         </div>
     </footer>
