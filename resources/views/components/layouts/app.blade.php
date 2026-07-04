@@ -382,7 +382,7 @@
 
     <!-- Page Footer -->
     <footer class="bg-slate-50 dark:bg-darkCard border-t border-slate-200 dark:border-slate-800 mt-16 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8">
             <div class="md:col-span-2">
                 <div class="flex items-center gap-2 mb-4">
                     <img src="/pwa-192.png" alt="MauLoker" class="w-6 h-6 rounded-lg object-contain">
@@ -419,6 +419,15 @@
             </div>
 
             <div>
+                <h5 class="font-bold text-sm text-slate-900 dark:text-white mb-4 uppercase tracking-wider">Ketentuan</h5>
+                <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+                    <li><a href="/user-agreement" class="hover:text-primary transition">User Agreement</a></li>
+                    <li><a href="/privacy-policy" class="hover:text-primary transition">Privacy Policy</a></li>
+                    <li><a href="/terms-of-service" class="hover:text-primary transition">Terms of Service</a></li>
+                </ul>
+            </div>
+
+            <div>
                 <h5 class="font-bold text-sm text-slate-900 dark:text-white mb-4 uppercase tracking-wider">Hubungi Kami</h5>
                 <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
                     <li class="flex items-center gap-2">
@@ -432,8 +441,12 @@
                 </ul>
             </div>
         </div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 dark:border-slate-800 mt-8 pt-8 text-center text-xs text-slate-500">
-            &copy; {{ date('Y') }} <strong>MauLoker</strong>. Portal Kerja Halal &amp; Profesional untuk Indonesia. &#9825;</div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 dark:border-slate-800 mt-8 pt-8 text-center text-xs text-slate-500 space-y-2">
+            <p>&copy; {{ date('Y') }} <strong>MauLoker</strong>. Portal Kerja Impianmu &amp; Profesional untuk Indonesia. &#9825;</p>
+            <p class="text-[10px] text-slate-400 dark:text-slate-500 max-w-2xl mx-auto leading-relaxed">
+                Pernyataan Penting: MauLoker adalah platform komunitas independen non-komersial, bukan badan usaha (bukan PT/CV). Layanan ini 100% gratis. Segala bentuk komunikasi dan hubungan kerja menjadi tanggung jawab pribadi masing-masing pencari kerja dan pemberi kerja secara mandiri.
+            </p>
+        </div>
     </footer>
 
     @livewireScripts

@@ -12,6 +12,7 @@ use App\Livewire\Candidate\Dashboard as CandidateDashboard;
 use App\Livewire\Company\Dashboard as CompanyDashboard;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Chat;
+use App\Livewire\LegalPage;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,6 +25,11 @@ Route::get('/jobs/{job_slug}', JobDetail::class)->name('jobs.detail');
 // Public Content Routes
 Route::get('/blog', Blog::class)->name('blog');
 Route::get('/blog/{slug}', Blog::class)->name('blog.detail');
+
+// Public Legal Policy Routes
+Route::get('/user-agreement', LegalPage::class)->defaults('type', 'user-agreement')->name('user-agreement');
+Route::get('/privacy-policy', LegalPage::class)->defaults('type', 'privacy-policy')->name('privacy-policy');
+Route::get('/terms-of-service', LegalPage::class)->defaults('type', 'terms-of-service')->name('terms-of-service');
 
 // Guest Authentication Routes
 Route::middleware('guest')->group(function () {
