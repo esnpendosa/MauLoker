@@ -18,6 +18,18 @@
     
     --color-text-light: var(--text-light, #111827);
     --color-text-dark: var(--text-dark, #F9FAFB);
+
+    /* CamelCase aliases for compatibility with blade templates */
+    --color-lightBg: var(--light-bg, #FFFFFF);
+    --color-lightCard: var(--light-card, #F8FAFC);
+    --color-darkBg: var(--dark-bg, #0B1220);
+    --color-darkCard: var(--dark-card, #111827);
+    --color-textLight: var(--text-light, #111827);
+    --color-textDark: var(--text-dark, #F9FAFB);
+    --color-primaryHover: var(--primary-hover, #059669);
+    --color-primaryDark: var(--primary-dark, #047857);
     
     --radius-custom: var(--border-radius, 0.5rem);
 }
+
+@variant dark (&:where(.dark, .dark *));

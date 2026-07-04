@@ -7,6 +7,7 @@ use App\Models\JobCategory;
 use App\Models\Application;
 use App\Models\Company;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -46,6 +47,7 @@ class Dashboard extends Component
 
     // Applicant filter
     public $selectedJobId = '';
+    public $expandedApplicantId = null;
 
     public function mount()
     {
@@ -150,7 +152,61 @@ class Dashboard extends Component
             $job->update($data);
             session()->flash('success', 'Lowongan pekerjaan berhasil diperbarui!');
         } else {
-            Job::create($data);
+            $newJob = Job::create($data);
+            
+            // Send email notification to Admin (mauloker.comm@gmail.com)
+            try {
+                Mail::send([], [], function ($message) use ($newJob) {
+                    $message->to('mauloker.comm@gmail.com')
+                        ->subject('Lowongan Baru Dipasang: ' . $newJob->title)
+                        ->html('
+                            <div style="font-family: \'Instrument Sans\', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; background-color: #f8fafc; border-radius: 24px;">
+                                <div style="background-color: #ffffff; padding: 40px; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                                    <div style="margin-bottom: 24px;">
+                                        <span style="font-size: 24px; font-weight: 900; color: #10b981;">MauLoker Admin</span>
+                                    </div>
+                                    <h2 style="font-size: 20px; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 12px;">Pemberitahuan Lowongan Baru</h2>
+                                    <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 24px;">
+                                        Sebuah lowongan pekerjaan baru telah berhasil dipasang di platform MauLoker. Berikut adalah detailnya:
+                                    </p>
+                                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
+                                        <tr>
+                                            <td style="padding: 8px 0; font-weight: 700; color: #475569; width: 150px;">Judul Lowongan:</td>
+                                            <td style="padding: 8px 0; color: #0f172a;">' . e($newJob->title) . '</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; font-weight: 700; color: #475569;">Perusahaan:</td>
+                                            <td style="padding: 8px 0; color: #0f172a;">' . e($newJob->company->name) . '</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; font-weight: 700; color: #475569;">Kota:</td>
+                                            <td style="padding: 8px 0; color: #0f172a;">' . e($newJob->city) . '</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; font-weight: 700; color: #475569;">Jenis Kontrak:</td>
+                                            <td style="padding: 8px 0; color: #0f172a;">' . e($newJob->employment_type) . '</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; font-weight: 700; color: #475569;">Gaji:</td>
+                                            <td style="padding: 8px 0; color: #10b981; font-weight: 700;">Rp ' . number_format($newJob->salary_min, 0, ',', '.') . ' - Rp ' . number_format($newJob->salary_max, 0, ',', '.') . '</td>
+                                        </tr>
+                                    </table>
+                                    <div style="text-align: center; margin-bottom: 32px;">
+                                        <a href="' . url('/jobs/' . $newJob->slug) . '" style="display: inline-block; padding: 14px 32px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);">
+                                            Lihat Lowongan di Situs
+                                        </a>
+                                    </div>
+                                    <p style="font-size: 11px; color: #94a3b8; text-align: center; margin-top: 24px;">
+                                        Email ini dikirim otomatis oleh sistem notifikasi MauLoker.
+                                    </p>
+                                </div>
+                            </div>
+                        ');
+                });
+            } catch (\Exception $e) {
+                logger()->error('Failed sending new job notification: ' . $e->getMessage());
+            }
+
             session()->flash('success', 'Lowongan pekerjaan baru berhasil dipasang!');
         }
 
@@ -173,7 +229,72 @@ class Dashboard extends Component
             'status_history' => $history
         ]);
 
-        session()->flash('success', 'Status lamaran kandidat berhasil diubah menjadi ' . $newStatus . '!');
+        // Send email to Candidate about status change
+        $candidate = $app->candidate;
+        $job = $app->job;
+        $company = $job->company;
+        $candidateUrl = url('/candidate/dashboard');
+
+        $statusLabels = [
+            'Applied' => 'Terkirim',
+            'Reviewed' => 'Ditinjau HRD',
+            'Interview' => 'Wawancara',
+            'Accepted' => 'Diterima Kerja',
+            'Rejected' => 'Ditolak',
+        ];
+
+        $statusLabel = $statusLabels[$newStatus] ?? $newStatus;
+        $candidateName = e($candidate->name);
+        $jobTitle = e($job->title);
+        $companyName = e($company->name);
+
+        try {
+            Mail::send([], [], function ($message) use ($candidate, $job, $candidateName, $jobTitle, $companyName, $statusLabel, $candidateUrl) {
+                $message->to($candidate->email)
+                    ->subject('Pembaruan Status Lamaran: ' . $job->title)
+                    ->html(<<<HTML
+                        <div style="font-family: 'Instrument Sans', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; background-color: #f8fafc; border-radius: 24px;">
+                            <div style="background-color: #ffffff; padding: 40px; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                                <div style="margin-bottom: 24px;">
+                                    <span style="font-size: 24px; font-weight: 900; color: #10b981;">MauLoker</span>
+                                </div>
+                                <h2 style="font-size: 20px; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 12px;">Halo {$candidateName}!</h2>
+                                <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 24px;">
+                                    Status lamaran Anda untuk posisi <strong>{$jobTitle}</strong> di <strong>{$companyName}</strong> telah diperbarui oleh perekrut menjadi:
+                                </p>
+                                <div style="background-color: #f1f5f9; padding: 16px; border-radius: 12px; font-weight: 800; font-size: 18px; color: #1e293b; text-align: center; margin-bottom: 24px;">
+                                    {$statusLabel}
+                                </div>
+                                <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 24px;">
+                                    Silakan buka dashboard pencari kerja Anda di platform MauLoker untuk detail proses selanjutnya.
+                                </p>
+                                <div style="text-align: center; margin-bottom: 32px;">
+                                    <a href="{$candidateUrl}" style="display: inline-block; padding: 14px 32px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);">
+                                        Masuk Dashboard
+                                    </a>
+                                </div>
+                                <p style="font-size: 11px; color: #94a3b8; text-align: center; margin-top: 24px;">
+                                    Email ini dikirim otomatis oleh MauLoker. Jangan membalas email ini.
+                                </p>
+                            </div>
+                        </div>
+HTML
+                    );
+            });
+        } catch (\Exception $e) {
+            logger()->error('Failed sending candidate application update email: ' . $e->getMessage());
+        }
+
+        session()->flash('success', 'Status lamaran kandidat berhasil diubah!');
+    }
+
+    public function toggleApplicantDetails($id)
+    {
+        if ($this->expandedApplicantId === $id) {
+            $this->expandedApplicantId = null;
+        } else {
+            $this->expandedApplicantId = $id;
+        }
     }
 
     public function saveCompanyProfile()

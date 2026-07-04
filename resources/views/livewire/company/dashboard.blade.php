@@ -1,57 +1,96 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-    
-    <!-- Dashboard Header -->
-    <div class="bg-[#111827] text-white p-8 rounded-3xl border border-slate-800 shadow-xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <!-- Glow accent -->
-        <div class="absolute top-0 right-0 w-48 h-48 bg-primary/10 rounded-full blur-[100px]"></div>
-
-        <div class="flex items-center gap-5 relative z-10">
-            @if($company->logo)
-                <img src="{{ $company->logo }}" alt="{{ $company->name }}" class="w-16 h-16 rounded-2xl object-contain bg-white border border-slate-800">
-            @else
-                <div class="w-16 h-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-bold text-2xl shrink-0">
-                    {{ substr($company->name, 0, 1) }}
-                </div>
-            @endif
-            <div>
-                <h1 class="text-xl sm:text-2xl font-black">{{ $company->name }}</h1>
-                <p class="text-xs text-slate-400">Pemberi Kerja & bull; {{ $company->category ?: 'Bidang Industri Belum Diisi' }}</p>
-                <div class="flex items-center gap-2 mt-2">
-                    <span class="px-2 py-0.5 rounded bg-emerald-950/40 border border-emerald-800 text-[10px] text-emerald-400 font-bold">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Sidebar Kiri (Gaya RightWork.inc) -->
+        <aside class="lg:col-span-3 space-y-6">
+            <!-- Profile Info Box -->
+            <div class="bg-white dark:bg-darkCard p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+                @if($company->logo)
+                    <img src="{{ $company->logo }}" alt="{{ $company->name }}" class="w-16 h-16 mx-auto rounded-2xl object-cover bg-white/10 border border-white/10 p-1 mb-3 shadow-md">
+                @else
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-primary flex items-center justify-center font-bold text-2xl shadow-lg text-white mb-3">
+                        {{ substr($company->name, 0, 1) }}
+                    </div>
+                @endif
+                <h2 class="text-base font-black text-slate-900 dark:text-white leading-snug">{{ $company->name }}</h2>
+                <p class="text-xs text-slate-400 mt-1">Pemberi Kerja &bull; {{ $company->category ?: 'Industri belum diisi' }}</p>
+                <div class="flex flex-col gap-1.5 mt-3">
+                    <span class="px-2.5 py-1 rounded-lg bg-emerald-600/20 border border-emerald-500/20 text-[10px] text-emerald-300 font-bold mx-auto">
                         Reputasi: {{ $company->reputation_score }} / 5.0
                     </span>
                     @if($company->verified)
-                        <span class="px-2 py-0.5 rounded bg-blue-950/40 border border-blue-800 text-[10px] text-blue-400 font-bold uppercase tracking-wider">Terverifikasi</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-primary/20 border border-primary/20 text-[10px] text-primary-hover font-bold uppercase tracking-wider mx-auto flex items-center gap-1">
+                            <i data-lucide="shield-check" class="w-3 h-3"></i> Terverifikasi
+                        </span>
                     @endif
                 </div>
             </div>
-        </div>
 
-        <div class="flex flex-wrap gap-2 relative z-10">
-            <button wire:click="$set('activeTab', 'dashboard')" class="px-5 py-2.5 rounded-xl text-xs font-bold transition {{ $activeTab === 'dashboard' ? 'bg-primary text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-300' }}">
-                <i data-lucide="bar-chart-2" class="w-4 h-4 inline-block mr-1"></i> Ringkasan
-            </button>
-            <button wire:click="$set('activeTab', 'manage_jobs')" class="px-5 py-2.5 rounded-xl text-xs font-bold transition {{ $activeTab === 'manage_jobs' ? 'bg-primary text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-300' }}">
-                <i data-lucide="briefcase" class="w-4 h-4 inline-block mr-1"></i> Lowongan Anda
-            </button>
-            <button wire:click="$set('activeTab', 'applicants')" class="px-5 py-2.5 rounded-xl text-xs font-bold transition {{ $activeTab === 'applicants' ? 'bg-primary text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-300' }}">
-                <i data-lucide="users" class="w-4 h-4 inline-block mr-1"></i> Pelamar Masuk
-            </button>
-            <button wire:click="$set('activeTab', 'profile')" class="px-5 py-2.5 rounded-xl text-xs font-bold transition {{ $activeTab === 'profile' ? 'bg-primary text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-300' }}">
-                <i data-lucide="building-2" class="w-4 h-4 inline-block mr-1"></i> Profil Perusahaan
-            </button>
-        </div>
-    </div>
+            <!-- Sidebar Navigation Menu -->
+            <nav class="bg-white dark:bg-darkCard rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-4 space-y-1">
+                @php
+                    $companyMenu = [
+                        'dashboard' => ['label' => 'Ringkasan', 'icon' => 'bar-chart-2'],
+                        'manage_jobs' => ['label' => 'Lowongan Anda', 'icon' => 'briefcase'],
+                        'applicants' => ['label' => 'Pelamar Masuk', 'icon' => 'users'],
+                        'profile' => ['label' => 'Profil Perusahaan', 'icon' => 'building-2'],
+                    ];
+                @endphp
+                @foreach($companyMenu as $key => $labelItem)
+                    <button wire:click="$set('activeTab', '{{ $key }}')" 
+                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition text-left group
+                        {{ $activeTab === $key 
+                            ? 'bg-primary/10 text-primary border-l-4 border-primary' 
+                            : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-white' 
+                        }}">
+                        <i data-lucide="{{ $labelItem['icon'] }}" class="w-4.5 h-4.5 shrink-0 transition {{ $activeTab === $key ? 'text-primary' : 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300' }}"></i>
+                        <span>{{ $labelItem['label'] }}</span>
+                    </button>
+                @endforeach
+            </nav>
+        </aside>
 
-    <!-- Ad Placement -->
-    @if($dashboardAd)
-        <div class="w-full">
-            {!! $dashboardAd->code_content !!}
-        </div>
-    @endif
+        <!-- Area Konten Utama Kanan (Gaya RightWork.inc) -->
+        <main class="lg:col-span-9 space-y-6">
+            <!-- Search & Top Actions -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="relative w-full max-w-md">
+                    <input type="text" placeholder="Cari lowongan, pelamar, atau status rekrutmen..." 
+                        class="w-full bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-800 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 shadow-sm">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                </div>
+                <div class="text-xs text-slate-400 font-bold dark:text-slate-500 flex items-center gap-2 bg-slate-50 dark:bg-slate-900 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                    <span>{{ now()->locale('id')->isoFormat('dddd, D MMMM Y') }}</span>
+                </div>
+            </div>
 
-    <!-- Main Content Area -->
-    <div class="grid grid-cols-1 gap-8">
+            <!-- Welcome Banner (Gaya RightWork.inc) -->
+            <div class="relative overflow-hidden bg-gradient-to-r from-slate-900 via-slate-800 to-primary-dark/80 text-white p-8 rounded-3xl border border-primary/20 shadow-xl">
+                <!-- Decorative Red/Orange Wave Gradient Shape -->
+                <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-rose-500/20 to-transparent pointer-events-none"></div>
+                <div class="absolute -right-16 -top-16 w-48 h-48 bg-primary/20 rounded-full blur-[80px] pointer-events-none"></div>
+                <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-emerald-500/20 rounded-full blur-[60px] pointer-events-none"></div>
+                <div class="absolute -right-20 top-1/2 -translate-y-1/2 w-64 h-32 bg-gradient-to-tr from-rose-500 to-orange-500 rounded-full blur-[70px] opacity-40 pointer-events-none"></div>
+                
+                <div class="relative z-10 space-y-1">
+                    <span class="text-[10px] uppercase tracking-wider font-extrabold text-primary-hover">Selamat Datang di Panel Rekrutmen</span>
+                    <h1 class="text-2xl sm:text-3xl font-black tracking-tight">Halo, {{ $company->name }} !</h1>
+                    <p class="text-xs text-slate-400 max-w-lg leading-relaxed pt-1">
+                        Pasang lowongan kerja baru, tinjau lamaran masuk dari pelamar terbaik, verifikasi reputasi perusahaan Anda, dan kelola seleksi kandidat secara efisien.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Ad Placement -->
+            @if($dashboardAd)
+                <div class="w-full">
+                    {!! $dashboardAd->code_content !!}
+                </div>
+            @endif
+
+            <!-- Main Content Area inside main column -->
+            <div class="grid grid-cols-1 gap-8">
         
         <!-- Tab: Dashboard / Summary -->
         @if($activeTab === 'dashboard')
@@ -79,9 +118,9 @@
                     <div class="bg-white dark:bg-darkCard p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
                         <div>
                             <span class="text-xs text-slate-400 block font-medium">Total Pelamar Masuk</span>
-                            <span class="text-2xl font-black text-indigo-500 mt-1 block">{{ $stats['total_applies'] }}</span>
+                            <span class="text-2xl font-black text-primary mt-1 block">{{ $stats['total_applies'] }}</span>
                         </div>
-                        <div class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/25 text-indigo-500 flex items-center justify-center">
+                        <div class="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
                             <i data-lucide="users" class="w-6 h-6"></i>
                         </div>
                     </div>
@@ -158,7 +197,7 @@
                                         </span>
                                     </td>
                                     <td class="py-4 px-4 text-right">
-                                        <button wire:click="openEditJob({{ $job->id }})" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-850 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition">
+                                        <button wire:click="openEditJob({{ $job->id }})" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-855 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition">
                                             <i data-lucide="edit" class="w-4 h-4"></i>
                                         </button>
                                     </td>
@@ -218,7 +257,10 @@
                             @forelse($applicants as $applicant)
                                 <tr>
                                     <td class="py-4 px-4 font-bold text-slate-900 dark:text-white">
-                                        {{ $applicant->candidate->name }}
+                                        <button wire:click="toggleApplicantDetails({{ $applicant->id }})" class="hover:text-primary transition text-left font-bold flex items-center gap-1.5 focus:outline-none">
+                                            <i data-lucide="{{ $expandedApplicantId === $applicant->id ? 'chevron-down' : 'chevron-right' }}" class="w-4 h-4 text-slate-400"></i>
+                                            <span>{{ $applicant->candidate->name }}</span>
+                                        </button>
                                     </td>
                                     <td class="py-4 px-4 text-slate-500">{{ $applicant->job->title }}</td>
                                     <td class="py-4 px-4 text-center">
@@ -238,7 +280,7 @@
                                         @endif
                                     </td>
                                     <td class="py-4 px-4">
-                                        <select wire:change="changeStatus({{ $applicant->id }}, $event.target.value)" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-2.5 py-1 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer font-semibold">
+                                        <select wire:change="changeStatus({{ $applicant->id }}, $event.target.value)" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-2.5 py-1 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer font-semibold font-semibold">
                                             <option value="Applied" {{ $applicant->status === 'Applied' ? 'selected' : '' }}>Terkirim</option>
                                             <option value="Reviewed" {{ $applicant->status === 'Reviewed' ? 'selected' : '' }}>Ditinjau</option>
                                             <option value="Interview" {{ $applicant->status === 'Interview' ? 'selected' : '' }}>Wawancara</option>
@@ -247,6 +289,105 @@
                                         </select>
                                     </td>
                                 </tr>
+                                
+                                @if($expandedApplicantId === $applicant->id)
+                                    <tr class="bg-slate-50/50 dark:bg-slate-900/30">
+                                        <td colspan="6" class="p-6 border-b border-slate-100 dark:border-slate-800">
+                                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                                <!-- Contact Info & Education -->
+                                                <div class="space-y-4">
+                                                    <div>
+                                                        <h5 class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2">Informasi Kontak & Bio</h5>
+                                                        <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
+                                                            <div class="flex items-center gap-1.5">
+                                                                <i data-lucide="mail" class="w-3.5 h-3.5 text-slate-400"></i>
+                                                                <a href="mailto:{{ $applicant->candidate->email }}" class="hover:underline text-primary">{{ $applicant->candidate->email }}</a>
+                                                            </div>
+                                                            @if($applicant->candidate->phone)
+                                                                <div class="flex items-center gap-1.5">
+                                                                    <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400"></i>
+                                                                    <span>{{ $applicant->candidate->phone }}</span>
+                                                                </div>
+                                                            @endif
+                                                            @if($applicant->candidate->location)
+                                                                <div class="flex items-center gap-1.5">
+                                                                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
+                                                                    <span>{{ $applicant->candidate->location }}</span>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                        @if($applicant->candidate->bio)
+                                                            <p class="text-xs text-slate-500 italic mt-3 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200/50 dark:border-slate-800/50">
+                                                                "{{ $applicant->candidate->bio }}"
+                                                            </p>
+                                                        @endif
+                                                    </div>
+                                                </div>
+
+                                                <!-- Match & Resume Info -->
+                                                <div class="space-y-4">
+                                                    <div>
+                                                        <h5 class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2">Analisis AI Match Score</h5>
+                                                        <div class="space-y-2 text-xs">
+                                                            <div class="flex items-center justify-between text-slate-600 dark:text-slate-400">
+                                                                <span>Keahlian & Skill:</span>
+                                                                <span class="font-bold {{ $applicant->skill_score >= 80 ? 'text-emerald-500' : ($applicant->skill_score >= 50 ? 'text-amber-500' : 'text-slate-500') }}">{{ $applicant->skill_score }}%</span>
+                                                            </div>
+                                                            <div class="flex items-center justify-between text-slate-600 dark:text-slate-400">
+                                                                <span>Kesesuaian Pengalaman:</span>
+                                                                <span class="font-bold {{ $applicant->experience_score >= 80 ? 'text-emerald-500' : ($applicant->experience_score >= 50 ? 'text-amber-500' : 'text-slate-500') }}">{{ $applicant->experience_score }}%</span>
+                                                            </div>
+                                                            <div class="flex items-center justify-between text-slate-600 dark:text-slate-400">
+                                                                <span>Kesesuaian Pendidikan:</span>
+                                                                <span class="font-bold {{ $applicant->education_score >= 80 ? 'text-emerald-500' : ($applicant->education_score >= 50 ? 'text-amber-500' : 'text-slate-500') }}">{{ $applicant->education_score }}%</span>
+                                                            </div>
+                                                            <div class="flex items-center justify-between text-slate-600 dark:text-slate-400">
+                                                                <span>Kesesuaian Gaji & Lokasi:</span>
+                                                                <span class="font-bold {{ ($applicant->salary_score + $applicant->location_score)/2 >= 80 ? 'text-emerald-500' : 'text-slate-500' }}">{{ round(($applicant->salary_score + $applicant->location_score)/2) }}%</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Experience & Skills details -->
+                                                <div class="space-y-4">
+                                                    <div>
+                                                        <h5 class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2">Kualifikasi Utama</h5>
+                                                        <div class="space-y-1 text-xs text-slate-700 dark:text-slate-300">
+                                                            <div><strong>Pendidikan:</strong> {{ $applicant->candidate->education_level ?: '-' }}</div>
+                                                            <div><strong>Pengalaman:</strong> {{ $applicant->candidate->experience_years ?: 0 }} Tahun</div>
+                                                            @if($applicant->candidate->expected_salary)
+                                                                <div><strong>Harapan Gaji:</strong> Rp {{ number_format($applicant->candidate->expected_salary, 0, ',', '.') }} / Bulan</div>
+                                                            @endif
+                                                        </div>
+                                                        
+                                                        @if($applicant->candidate->skills)
+                                                            <div class="mt-3 flex flex-wrap gap-1">
+                                                                @php
+                                                                    $skills = is_array($applicant->candidate->skills) ? $applicant->candidate->skills : (json_decode($applicant->candidate->skills, true) ?: explode(',', $applicant->candidate->skills));
+                                                                @endphp
+                                                                @foreach($skills as $sk)
+                                                                    @if(trim($sk))
+                                                                        <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[10px] text-slate-600 dark:text-slate-400 font-medium">{{ trim($sk) }}</span>
+                                                                    @endif
+                                                                @endforeach
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @if($applicant->cover_letter)
+                                                <div class="mt-5 pt-4 border-t border-slate-200/50 dark:border-slate-850">
+                                                    <h5 class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Surat Lamaran / Cover Letter</h5>
+                                                    <p class="text-xs text-slate-700 dark:text-slate-300 whitespace-pre-line bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/50 dark:border-slate-800/50">
+                                                        {{ $applicant->cover_letter }}
+                                                    </p>
+                                                </div>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endif
                             @empty
                                 <tr>
                                     <td colspan="6" class="text-center py-12 text-slate-400">
@@ -344,6 +485,8 @@
             </div>
         @endif
 
+            </div>
+        </main>
     </div>
 
     <!-- Job Modals (Create / Edit) -->

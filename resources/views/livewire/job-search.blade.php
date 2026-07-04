@@ -171,7 +171,7 @@
                                 <div class="flex flex-wrap items-center gap-1.5 pt-2">
                                     <span class="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] text-slate-500 dark:text-slate-400 font-semibold">{{ $job->employment_type }}</span>
                                     <span class="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold">{{ $job->location_type }}</span>
-                                    <span class="px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400 text-[10px] font-semibold">{{ $job->education_level ?: 'Semua Pendidikan' }}</span>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-semibold">{{ $job->education_level ?: 'Semua Pendidikan' }}</span>
                                 </div>
                             </div>
                         </div>

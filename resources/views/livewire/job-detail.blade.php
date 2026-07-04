@@ -57,13 +57,24 @@
             </div>
         </div>
 
-        <div class="flex items-center gap-3 relative z-10">
+        <div class="flex flex-wrap items-center gap-3 relative z-10">
+            <button wire:click="toggleSaveJob" class="px-5 py-3.5 rounded-2xl border {{ $isSaved ? 'bg-rose-50 border-rose-200 dark:bg-rose-950/20 dark:border-rose-900/50 text-rose-500' : 'bg-slate-50 border-slate-200 dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100' }} text-sm font-bold transition flex items-center justify-center gap-2">
+                <i data-lucide="bookmark" class="w-4 h-4 {{ $isSaved ? 'fill-current' : '' }}"></i>
+                <span>{{ $isSaved ? 'Tersimpan' : 'Simpan' }}</span>
+            </button>
+
             @if($hasApplied)
                 <button disabled class="w-full md:w-auto px-8 py-3.5 bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 font-bold rounded-2xl text-sm cursor-not-allowed flex items-center justify-center gap-1.5">
                     <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>
                     <span>Telah Dilamar</span>
                 </button>
             @else
+                @if($hasCv)
+                    <button wire:click="quickApply" wire:loading.attr="disabled" class="w-full md:w-auto px-6 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-2xl text-sm transition shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2">
+                        <i data-lucide="zap" class="w-4 h-4 fill-current"></i>
+                        <span>Lamar Cepat (1-Klik)</span>
+                    </button>
+                @endif
                 <button wire:click="openApply" class="w-full md:w-auto px-8 py-3.5 bg-primary hover:bg-primary-hover text-white font-extrabold rounded-2xl text-sm transition shadow-lg shadow-primary/25 flex items-center justify-center gap-2">
                     <span>Lamar Pekerjaan</span>
                     <i data-lucide="send" class="w-4 h-4"></i>
@@ -132,7 +143,7 @@
                         <h3 class="text-lg font-bold text-slate-900 dark:text-white pb-2">Keahlian yang Dibutuhkan</h3>
                         <div class="flex flex-wrap gap-2">
                             @php
-                                $skills = is_array($job->skills) ? $job->skills : json_decode($job->skills, true) ?? explode(',', $job->skills);
+                                $skills = is_array($job->skills) ? $job->skills : (json_decode($job->skills, true) ?? explode(',', $job->skills));
                             @endphp
                             @foreach($skills as $skill)
                                 <span class="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300">
@@ -206,7 +217,7 @@
                         <div class="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl space-y-2 border border-slate-100 dark:border-slate-900">
                             <div class="flex items-center justify-between text-xs">
                                 <span class="text-slate-400">Persaingan Lowongan</span>
-                                <span class="font-bold text-indigo-500">{{ $matchResult['competition_level'] }}</span>
+                                <span class="font-bold text-primary">{{ $matchResult['competition_level'] }}</span>
                             </div>
                             <div class="flex items-center justify-between text-xs">
                                 <span class="text-slate-400">Peluang Lolos Wawancara</span>
@@ -250,7 +261,7 @@
                 </div>
 
                 <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                    {{ Str_Limit_Helper($job->company->description, 120) }}
+                    {{ \Illuminate\Support\Str::limit($job->company->description, 120) }}
                 </p>
 
                 <div class="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs">

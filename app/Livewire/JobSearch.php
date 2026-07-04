@@ -123,6 +123,27 @@ class JobSearch extends Component
             $seoDescription = 'Temukan lowongan kerja ' . $this->q . ' di Indonesia. Filter gaji, remote/onsite, dan pengalaman kerja.';
         }
 
+        // Structured SearchResults Schema
+        $schemaData = [
+            '@context' => 'https://schema.org',
+            '@type' => 'SearchResultsPage',
+            'mainEntity' => [
+                '@type' => 'ItemList',
+                'numberOfItems' => $jobs->total(),
+                'itemListElement' => []
+            ]
+        ];
+
+        $idx = 1;
+        foreach ($jobs->items() as $job) {
+            $schemaData['mainEntity']['itemListElement'][] = [
+                '@type' => 'ListItem',
+                'position' => $idx++,
+                'url' => route('jobs.detail', $job->slug),
+                'name' => $job->title . ' di ' . ($job->company ? $job->company->name : 'Perusahaan')
+            ];
+        }
+
         return view('livewire.job-search', [
             'jobs' => $jobs,
             'categories' => $categories,
@@ -130,7 +151,8 @@ class JobSearch extends Component
             'topAd' => $topAd
         ])->layout('components.layouts.app', [
             'seoTitle' => $seoTitle,
-            'seoDescription' => $seoDescription
+            'seoDescription' => $seoDescription,
+            'schemaData' => $schemaData
         ]);
     }
 }

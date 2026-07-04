@@ -49,7 +49,7 @@ class Home extends Component
         $latestJobs = Job::with('company', 'category')
             ->where('status', 'active')
             ->latest()
-            ->take(6)
+            ->take(8)
             ->get();
 
         $featuredCompanies = Company::where('status', 'active')
@@ -73,6 +73,53 @@ class Home extends Component
             ->where('status', true)
             ->first();
 
+        $minSalary = Job::where('status', 'active')->where('salary_min', '>', 0)->min('salary_min') ?? 4000000;
+        $maxSalary = Job::where('status', 'active')->where('salary_max', '>', 0)->max('salary_max') ?? 25000000;
+
+        $latestCandidates = User::where('role', 'candidate')
+            ->latest()
+            ->take(3)
+            ->get()
+            ->map(function($u) {
+                $words = explode(' ', trim($u->name));
+                $initials = '';
+                foreach ($words as $w) {
+                    $initials .= strtoupper(substr($w, 0, 1));
+                }
+                return $initials ? substr($initials, 0, 2) : 'U';
+            })
+            ->toArray();
+
+        $settings = Setting::pluck('value', 'key')->all();
+        $seoTitle = ($settings['website_name'] ?? 'MauLoker') . ' - ' . ($settings['tagline'] ?? 'Temukan Pekerjaan Impianmu');
+        $seoDescription = 'MauLoker adalah platform pencarian kerja Indonesia terdepan. Temukan lowongan kerja terbaru, karir BUMN, Swasta, Magang, dan Remote terverifikasi secara instan.';
+
+        $schemaData = [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'WebSite',
+                    '@id' => url('/') . '#website',
+                    'url' => url('/'),
+                    'name' => ($settings['website_name'] ?? 'MauLoker'),
+                    'description' => ($settings['tagline'] ?? 'Temukan Pekerjaan Impianmu'),
+                    'potentialAction' => [
+                        '@type' => 'SearchAction',
+                        'target' => url('/jobs') . '?q={search_term_string}',
+                        'query-input' => 'required name=search_term_string'
+                    ],
+                    'inLanguage' => 'id-ID'
+                ],
+                [
+                    '@type' => 'Organization',
+                    '@id' => url('/') . '#organization',
+                    'name' => ($settings['website_name'] ?? 'MauLoker'),
+                    'url' => url('/'),
+                    'logo' => url('/favicon.png')
+                ]
+            ]
+        ];
+
         return view('livewire.home', [
             'banners' => $banners,
             'stats' => $stats,
@@ -84,7 +131,14 @@ class Home extends Component
             'roadmaps' => $roadmaps,
             'blogs' => $blogs,
             'middleAd' => $middleAd,
-        ])->layout('components.layouts.app');
+            'minSalary' => $minSalary,
+            'maxSalary' => $maxSalary,
+            'latestCandidates' => $latestCandidates,
+        ])->layout('components.layouts.app', [
+            'seoTitle' => $seoTitle,
+            'seoDescription' => $seoDescription,
+            'schemaData' => $schemaData
+        ]);
     }
 }
 

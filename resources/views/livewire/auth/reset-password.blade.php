@@ -10,57 +10,27 @@
                     <span class="bg-gradient-to-r from-primary to-emerald-500 bg-clip-text text-transparent">mau</span>loker<span class="text-emerald-500 font-extrabold text-sm align-super">.com</span>
                 </span>
             </div>
-            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">Daftar Akun Baru</h2>
-            <p class="text-xs text-slate-400">Bergabung dengan MauLoker untuk memulai karir atau merekrut talenta terbaik.</p>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">Atur Ulang Kata Sandi</h2>
+            <p class="text-xs text-slate-400">Silakan masukkan kata sandi baru Anda di bawah ini.</p>
         </div>
 
-        <form wire:submit.prevent="register" class="space-y-4 relative z-10">
-            
-            <!-- Role Selection -->
-            <div class="grid grid-cols-2 gap-4">
-                <label class="cursor-pointer">
-                    <input type="radio" wire:model="role" value="candidate" class="sr-only">
-                    <div class="p-3 border-2 rounded-2xl text-center space-y-1 transition text-xs font-bold" :class="{'border-primary bg-primary/5 text-primary': $wire.role === 'candidate', 'border-slate-200 dark:border-slate-800 text-slate-400 hover:border-slate-300': $wire.role !== 'candidate'}">
-                        <i data-lucide="user" class="w-5 h-5 mx-auto"></i>
-                        <span>Pencari Kerja</span>
-                    </div>
-                </label>
-                <label class="cursor-pointer">
-                    <input type="radio" wire:model="role" value="company" class="sr-only">
-                    <div class="p-3 border-2 rounded-2xl text-center space-y-1 transition text-xs font-bold" :class="{'border-primary bg-primary/5 text-primary': $wire.role === 'company', 'border-slate-200 dark:border-slate-800 text-slate-400 hover:border-slate-300': $wire.role !== 'company'}">
-                        <i data-lucide="building" class="w-5 h-5 mx-auto"></i>
-                        <span>Perusahaan</span>
-                    </div>
-                </label>
-            </div>
-            @error('role') <span class="text-[10px] text-rose-500 block">{{ $message }}</span> @enderror
-
-            <!-- Name -->
+        <form wire:submit.prevent="resetPassword" class="space-y-4 relative z-10">
+            <!-- Email (Readonly helper) -->
             <div class="space-y-1">
-                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nama Lengkap / Perusahaan</label>
-                <div class="relative flex items-center">
-                    <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3 shrink-0"></i>
-                    <input type="text" wire:model="name" placeholder="Ahmad Rian / PT. Maju Jaya" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-4 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400">
-                </div>
-                @error('name') <span class="text-[10px] text-rose-500">{{ $message }}</span> @enderror
-            </div>
-
-            <!-- Email -->
-            <div class="space-y-1">
-                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Alamat Email</label>
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Email Anda</label>
                 <div class="relative flex items-center">
                     <i data-lucide="mail" class="w-4 h-4 text-slate-400 absolute left-3 shrink-0"></i>
-                    <input type="email" wire:model="email" placeholder="nama@email.com" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-4 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400">
+                    <input type="email" wire:model="email" readonly class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-4 py-2.5 text-xs text-slate-500 cursor-not-allowed">
                 </div>
                 @error('email') <span class="text-[10px] text-rose-500">{{ $message }}</span> @enderror
             </div>
 
             <!-- Password -->
             <div class="space-y-1">
-                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Kata Sandi</label>
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Kata Sandi Baru</label>
                 <div class="relative flex items-center" x-data="{ showPassword: false }">
                     <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3 shrink-0"></i>
-                    <input :type="showPassword ? 'text' : 'password'" wire:model="password" placeholder="••••••••" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-10 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400">
+                    <input :type="showPassword ? 'text' : 'password'" wire:model="password" placeholder="Minimal 6 karakter" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-10 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400">
                     <button type="button" @click="showPassword = !showPassword" class="absolute right-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none">
                         <template x-if="!showPassword">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -75,10 +45,10 @@
 
             <!-- Password Confirmation -->
             <div class="space-y-1">
-                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Konfirmasi Kata Sandi</label>
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Konfirmasi Kata Sandi Baru</label>
                 <div class="relative flex items-center" x-data="{ showConfirmPassword: false }">
                     <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3 shrink-0"></i>
-                    <input :type="showConfirmPassword ? 'text' : 'password'" wire:model="password_confirmation" placeholder="••••••••" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-10 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400">
+                    <input :type="showConfirmPassword ? 'text' : 'password'" wire:model="password_confirmation" placeholder="Ulangi kata sandi baru" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-10 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400">
                     <button type="button" @click="showConfirmPassword = !showConfirmPassword" class="absolute right-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none">
                         <template x-if="!showConfirmPassword">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -91,13 +61,13 @@
             </div>
 
             <button type="submit" class="w-full py-3 bg-primary hover:bg-primary-hover text-white font-extrabold rounded-xl text-xs transition shadow-lg shadow-primary/20 flex items-center justify-center gap-1.5 mt-2">
-                <span>Daftar Akun</span>
-                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                <span>Perbarui Kata Sandi</span>
+                <i data-lucide="check" class="w-4 h-4"></i>
             </button>
         </form>
 
         <div class="text-center text-xs text-slate-500 relative z-10 pt-4 border-t border-slate-100 dark:border-slate-800">
-            Sudah punya akun? <a href="/login" class="font-bold text-primary hover:underline">Masuk Akun</a>
+            Kembali ke <a href="/login" class="font-bold text-primary hover:underline">Halaman Masuk</a>
         </div>
     </div>
 </div>

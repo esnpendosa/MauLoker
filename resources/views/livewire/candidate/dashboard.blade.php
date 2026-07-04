@@ -1,83 +1,130 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-    
-    <!-- Top Dashboard Header -->
-    <div class="bg-[#111827] text-white p-8 rounded-3xl border border-slate-800 shadow-xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <!-- Glow accents -->
-        <div class="absolute top-0 right-0 w-48 h-48 bg-primary/10 rounded-full blur-[100px]"></div>
-
-        <div class="flex items-center gap-5 relative z-10">
-            @if($user->avatar)
-                <img src="{{ $user->avatar }}" alt="{{ $user->name }}" class="w-16 h-16 rounded-2xl object-cover border-2 border-primary/20">
-            @else
-                <div class="w-16 h-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-bold text-2xl">
-                    {{ substr($user->name, 0, 1) }}
-                </div>
-            @endif
-            <div>
-                <h1 class="text-xl sm:text-2xl font-black">{{ $user->name }}</h1>
-                <p class="text-xs text-slate-400">Pencari Kerja &bull; {{ $user->location ?: 'Kota Belum Diisi' }}</p>
-                <div class="flex items-center gap-2 mt-2">
-                    <span class="px-2 py-0.5 rounded bg-primary/20 border border-primary/30 text-[10px] text-primary font-bold">
-                        ATS Score: {{ $user->cv_ats_score ?? 0 }}%
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        <div class="flex flex-wrap gap-2 relative z-10">
-            <button wire:click="$set('activeTab', 'profile')" class="px-5 py-2.5 rounded-xl text-xs font-bold transition {{ $activeTab === 'profile' ? 'bg-primary text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-300' }}">
-                <i data-lucide="user" class="w-4 h-4 inline-block mr-1"></i> Edit Profil
-            </button>
-            <button wire:click="$set('activeTab', 'cv_builder')" class="px-5 py-2.5 rounded-xl text-xs font-bold transition {{ $activeTab === 'cv_builder' ? 'bg-primary text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-300' }}">
-                <i data-lucide="file-text" class="w-4 h-4 inline-block mr-1"></i> CV ATS & Analyzer
-            </button>
-            <button wire:click="$set('activeTab', 'applications')" class="px-5 py-2.5 rounded-xl text-xs font-bold transition {{ $activeTab === 'applications' ? 'bg-primary text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-300' }}">
-                <i data-lucide="check-square" class="w-4 h-4 inline-block mr-1"></i> Lacak Lamaran
-            </button>
-        </div>
-    </div>
-
-    <!-- Ad Placement -->
-    @if($dashboardAd)
-        <div class="w-full">
-            {!! $dashboardAd->code_content !!}
-        </div>
-    @endif
-
-    <!-- Main Tab Contents -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        <!-- Left Sidebar Statistics -->
-        <aside class="bg-white dark:bg-darkCard p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
-            <h3 class="font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 uppercase text-xs tracking-wider">Status Akun</h3>
-            
-            <div class="space-y-4">
-                <div class="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl flex items-center justify-between">
-                    <div>
-                        <span class="text-xs text-slate-400 block">Kekuatan Resume</span>
-                        <span class="font-black text-slate-800 dark:text-slate-200 text-lg mt-0.5 block">{{ $user->cv_ats_score ?? 0 }} / 100</span>
+        <!-- Sidebar Kiri (Gaya RightWork.inc) -->
+        <aside class="lg:col-span-3 space-y-6">
+            <!-- Profile Info Box -->
+            <div class="bg-white dark:bg-darkCard p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+                @if($user->avatar)
+                    <img src="{{ $user->avatar }}" alt="{{ $user->name }}" class="w-16 h-16 mx-auto rounded-2xl object-cover border-2 border-primary/20 mb-3 shadow-md">
+                @else
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center font-bold text-2xl shadow-lg text-white mb-3">
+                        {{ substr($user->name, 0, 1) }}
                     </div>
-                    <i data-lucide="shield-check" class="w-8 h-8 text-primary opacity-60"></i>
-                </div>
-
-                <div class="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl flex items-center justify-between">
-                    <div>
-                        <span class="text-xs text-slate-400 block">Total Lamaran</span>
-                        <span class="font-black text-slate-800 dark:text-slate-200 text-lg mt-0.5 block">{{ $applications->count() }} Lamaran</span>
-                    </div>
-                    <i data-lucide="send" class="w-8 h-8 text-indigo-500 opacity-60"></i>
+                @endif
+                <h2 class="text-base font-black text-slate-900 dark:text-white leading-snug">{{ $user->name }}</h2>
+                <p class="text-xs text-slate-400 mt-1">Pencari Kerja &bull; {{ $user->location ?: 'Lokasi belum diisi' }}</p>
+                <div class="flex flex-col gap-1.5 mt-3">
+                    <span class="px-2.5 py-1 rounded-lg bg-primary/20 border border-primary/20 text-[10px] text-primary-hover font-bold mx-auto">
+                        Skor ATS: {{ $user->cv_ats_score ?? 0 }}%
+                    </span>
+                    @if($user->expected_salary)
+                        <span class="px-2.5 py-1 rounded-lg bg-emerald-600/20 border border-emerald-500/20 text-[10px] text-emerald-300 font-bold mx-auto">
+                            Ekspektasi: Rp {{ number_format($user->expected_salary, 0, ',', '.') }}
+                        </span>
+                    @endif
                 </div>
             </div>
 
-            <!-- Short tip box -->
-            <div class="p-4 bg-primary/5 border border-primary/10 rounded-2xl text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                <strong class="text-primary block mb-1">Tips Lolos Screening ATS:</strong>
-                Gunakan template CV 'Classic ATS' di tab CV Analyzer, lalu masukkan keterampilan kunci (seperti Laravel, PHP, Git) yang relevan dengan kualifikasi lowongan pekerjaan target Anda.
+            <!-- Sidebar Navigation Menu -->
+            <nav class="bg-white dark:bg-darkCard rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-4 space-y-1">
+                @php
+                    $candidateMenu = [
+                        'profile' => ['label' => 'Edit Profil', 'icon' => 'user'],
+                        'cv_builder' => ['label' => 'CV ATS & Analyzer', 'icon' => 'file-text'],
+                        'applications' => ['label' => 'Lacak Lamaran', 'icon' => 'check-square'],
+                        'saved_jobs' => ['label' => 'Lowongan Disimpan', 'icon' => 'bookmark'],
+                    ];
+                @endphp
+                @foreach($candidateMenu as $key => $labelItem)
+                    <button wire:click="$set('activeTab', '{{ $key }}')" 
+                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition text-left group
+                        {{ $activeTab === $key 
+                            ? 'bg-primary/10 text-primary border-l-4 border-primary' 
+                            : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-white' 
+                        }}">
+                        <i data-lucide="{{ $labelItem['icon'] }}" class="w-4.5 h-4.5 shrink-0 transition {{ $activeTab === $key ? 'text-primary' : 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300' }}"></i>
+                        <span>{{ $labelItem['label'] }}</span>
+                    </button>
+                @endforeach
+            </nav>
+
+            <!-- Status Akun Stats -->
+            <div class="bg-white dark:bg-darkCard p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                <h3 class="font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 uppercase text-[10px] tracking-wider">Status Akun</h3>
+                
+                <div class="space-y-3">
+                    <div class="p-3 bg-slate-50 dark:bg-slate-900/50 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block">Kekuatan Resume</span>
+                            <span class="font-black text-slate-800 dark:text-slate-200 text-sm mt-0.5 block">{{ $user->cv_ats_score ?? 0 }} / 100</span>
+                        </div>
+                        <i data-lucide="shield-check" class="w-6 h-6 text-primary opacity-60"></i>
+                    </div>
+
+                    <div class="p-3 bg-slate-50 dark:bg-slate-900/50 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block">Total Lamaran</span>
+                            <span class="font-black text-slate-800 dark:text-slate-200 text-sm mt-0.5 block">{{ $applications->count() }} Lamaran</span>
+                        </div>
+                        <i data-lucide="send" class="w-6 h-6 text-primary opacity-60"></i>
+                    </div>
+
+                    <div class="p-3 bg-slate-50 dark:bg-slate-900/50 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block">Lowongan Disimpan</span>
+                            <span class="font-black text-slate-800 dark:text-slate-200 text-sm mt-0.5 block">{{ $savedJobs->count() }} Lowongan</span>
+                        </div>
+                        <i data-lucide="bookmark" class="w-6 h-6 text-primary opacity-60"></i>
+                    </div>
+                </div>
+
+                <!-- Short tip box -->
+                <div class="p-4 bg-primary/5 border border-primary/10 rounded-2xl text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                    <strong class="text-primary block mb-1">Tips Lolos ATS:</strong>
+                    Gunakan template CV 'Classic ATS' di tab CV Analyzer, lalu masukkan keterampilan kunci (seperti Laravel, PHP, Git) yang relevan.
+                </div>
             </div>
         </aside>
 
-        <!-- Right Main Tab View -->
-        <main class="lg:col-span-2">
+        <!-- Area Konten Utama Kanan (Gaya RightWork.inc) -->
+        <main class="lg:col-span-9 space-y-6">
+            <!-- Search & Top Actions -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="relative w-full max-w-md">
+                    <input type="text" placeholder="Cari lowongan kerja, keterampilan, atau lokasi..." 
+                        class="w-full bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-800 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary placeholder-slate-400 shadow-sm">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                </div>
+                <div class="text-xs text-slate-400 font-bold dark:text-slate-500 flex items-center gap-2 bg-slate-50 dark:bg-slate-900 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                    <span>{{ now()->locale('id')->isoFormat('dddd, D MMMM Y') }}</span>
+                </div>
+            </div>
+
+            <!-- Welcome Banner (Gaya RightWork.inc) -->
+            <div class="relative overflow-hidden bg-gradient-to-r from-slate-900 via-slate-800 to-primary-dark/80 text-white p-8 rounded-3xl border border-primary/20 shadow-xl">
+                <!-- Decorative Red/Orange Wave Gradient Shape -->
+                <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-rose-500/20 to-transparent pointer-events-none"></div>
+                <div class="absolute -right-16 -top-16 w-48 h-48 bg-primary/20 rounded-full blur-[80px] pointer-events-none"></div>
+                <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-emerald-500/20 rounded-full blur-[60px] pointer-events-none"></div>
+                <div class="absolute -right-20 top-1/2 -translate-y-1/2 w-64 h-32 bg-gradient-to-tr from-rose-500 to-orange-500 rounded-full blur-[70px] opacity-40 pointer-events-none"></div>
+                
+                <div class="relative z-10 space-y-1">
+                    <span class="text-[10px] uppercase tracking-wider font-extrabold text-primary-hover">Selamat Datang di Portal Karir</span>
+                    <h1 class="text-2xl sm:text-3xl font-black tracking-tight">Halo, {{ $user->name }} !</h1>
+                    <p class="text-xs text-slate-400 max-w-lg leading-relaxed pt-1">
+                        Bangun resume ramah ATS dengan AI Analyzer, lamar pekerjaan terpercaya, dan pantau proses rekrutmen Anda dari satu dasbor terpadu.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Ad Placement -->
+            @if($dashboardAd)
+                <div class="w-full">
+                    {!! $dashboardAd->code_content !!}
+                </div>
+            @endif
             
             <!-- Tab: Profile Edit -->
             @if($activeTab === 'profile')
@@ -289,7 +336,7 @@
                                     
                                     @php
                                         $statusColors = [
-                                            'Applied' => 'bg-blue-100 text-blue-800 dark:bg-blue-950/20 dark:text-blue-400',
+                                            'Applied' => 'bg-primary/10 text-primary',
                                             'Reviewed' => 'bg-amber-100 text-amber-800 dark:bg-amber-950/20 dark:text-amber-400',
                                             'Interview' => 'bg-purple-100 text-purple-800 dark:bg-purple-950/20 dark:text-purple-400',
                                             'Accepted' => 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/20 dark:text-emerald-400',
@@ -357,6 +404,65 @@
                                 <p class="text-xs text-slate-500 max-w-xs mx-auto">Anda belum mengirimkan lamaran pekerjaan. Cari lowongan kerja idaman Anda dan mulai melamar sekarang.</p>
                                 <a href="/jobs" class="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition inline-block">
                                     Mulai Cari Pekerjaan
+                                </a>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            @endif
+
+            <!-- Tab: Saved Jobs -->
+            @if($activeTab === 'saved_jobs')
+                <div class="bg-white dark:bg-darkCard p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+                    <div class="border-b border-slate-100 dark:border-slate-800 pb-4">
+                        <h2 class="text-lg font-bold text-slate-900 dark:text-white">Lowongan Kerja Disimpan</h2>
+                        <p class="text-xs text-slate-400">Daftar lowongan pekerjaan yang Anda simpan untuk dilamar nanti.</p>
+                    </div>
+
+                    @if (session()->has('success'))
+                        <div class="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-semibold">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <div class="space-y-4">
+                        @forelse($savedJobs as $saved)
+                            @if($saved->job)
+                                <div class="p-5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                    <div class="flex items-center gap-4">
+                                        @if($saved->job->company && $saved->job->company->logo)
+                                            <img src="{{ $saved->job->company->logo }}" alt="{{ $saved->job->company->name }}" class="w-12 h-12 object-contain rounded-xl border border-slate-100 dark:border-slate-800 shrink-0">
+                                        @else
+                                            <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-lg shrink-0">
+                                                {{ substr($saved->job->company->name ?? 'M', 0, 1) }}
+                                            </div>
+                                        @endif
+                                        <div>
+                                            <h4 class="font-bold text-sm text-slate-900 dark:text-white hover:underline">
+                                                <a href="/jobs/{{ $saved->job->slug }}">{{ $saved->job->title }}</a>
+                                            </h4>
+                                            <p class="text-xs text-slate-500 dark:text-slate-400">{{ $saved->job->company->name ?? 'Perusahaan' }} &bull; {{ $saved->job->city }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <button wire:click="unsaveJob({{ $saved->id }})" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-xs text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 font-bold transition flex items-center gap-1.5">
+                                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                            <span>Hapus</span>
+                                        </button>
+                                        <a href="/jobs/{{ $saved->job->slug }}" class="px-4 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition flex items-center gap-1">
+                                            <span>Detail / Lamar</span>
+                                            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
+                        @empty
+                            <div class="text-center py-16 space-y-3">
+                                <i data-lucide="bookmark" class="w-12 h-12 text-slate-400 mx-auto"></i>
+                                <h4 class="font-bold text-slate-800 dark:text-slate-200">Belum Ada Lowongan Disimpan</h4>
+                                <p class="text-xs text-slate-500 max-w-xs mx-auto font-medium">Jelajahi ribuan lowongan di MauLoker dan simpan pekerjaan yang menarik perhatian Anda.</p>
+                                <a href="/jobs" class="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition inline-block">
+                                    Cari Lowongan Sekarang
                                 </a>
                             </div>
                         @endforelse

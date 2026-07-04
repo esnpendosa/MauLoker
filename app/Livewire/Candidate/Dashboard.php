@@ -128,11 +128,25 @@ class Dashboard extends Component
         );
     }
 
+    public function unsaveJob($id)
+    {
+        \App\Models\SavedJob::where('user_id', Auth::id())
+            ->where('id', $id)
+            ->delete();
+        
+        session()->flash('success', 'Lowongan dihapus dari daftar disimpan.');
+    }
+
     public function render()
     {
         $user = Auth::user();
         $applications = Application::with('job.company')
             ->where('candidate_id', $user->id)
+            ->latest()
+            ->get();
+
+        $savedJobs = \App\Models\SavedJob::with('job.company')
+            ->where('user_id', $user->id)
             ->latest()
             ->get();
 
@@ -144,6 +158,7 @@ class Dashboard extends Component
         return view('livewire.candidate.dashboard', [
             'user' => $user,
             'applications' => $applications,
+            'savedJobs' => $savedJobs,
             'dashboardAd' => $dashboardAd
         ])->layout('components.layouts.app', [
             'seoTitle' => 'Dashboard Pelamar - MauLoker',

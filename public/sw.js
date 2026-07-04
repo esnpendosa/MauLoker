@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mauloker-cache-v1';
+const CACHE_NAME = 'mauloker-cache-v2';
 const urlsToCache = [
   '/',
   '/offline',

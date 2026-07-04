@@ -3,8 +3,11 @@
 use App\Livewire\Home;
 use App\Livewire\JobSearch;
 use App\Livewire\JobDetail;
+use App\Livewire\Blog;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
+use App\Livewire\Auth\ForgotPassword;
+use App\Livewire\Auth\ResetPassword;
 use App\Livewire\Candidate\Dashboard as CandidateDashboard;
 use App\Livewire\Company\Dashboard as CompanyDashboard;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
@@ -18,10 +21,16 @@ Route::get('/offline', function() { return view('offline'); })->name('offline');
 Route::get('/jobs', JobSearch::class)->name('jobs.search');
 Route::get('/jobs/{job_slug}', JobDetail::class)->name('jobs.detail');
 
+// Public Content Routes
+Route::get('/blog', Blog::class)->name('blog');
+Route::get('/blog/{slug}', Blog::class)->name('blog.detail');
+
 // Guest Authentication Routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');
     Route::get('/register', Register::class)->name('register');
+    Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
+    Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
 });
 
 // Authenticated Routes
@@ -42,3 +51,4 @@ Route::middleware('auth')->group(function () {
         return redirect('/');
     })->name('logout');
 });
+
