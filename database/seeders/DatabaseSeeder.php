@@ -628,7 +628,7 @@ class DatabaseSeeder extends Seeder
  
         // 20. Create Announcements
         Announcement::create([
-            'title' => 'Selamat Datang di MauLoker!',
+            'title' => 'Selamat Datang di MauLoker',
             'content' => 'Temukan pekerjaan impian Anda atau pasang lowongan gratis sekarang.',
             'type' => 'info',
             'target_roles' => 'all',

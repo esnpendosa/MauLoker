@@ -63,7 +63,7 @@
                 
                 <div class="relative z-10 space-y-1">
                     <span class="text-[10px] uppercase tracking-wider font-extrabold text-primary-hover">Selamat Datang di Sistem</span>
-                    <h1 class="text-2xl sm:text-3xl font-black tracking-tight">Halo, Admin MauLoker !</h1>
+                    <h1 class="text-2xl sm:text-3xl font-black tracking-tight">Halo, Admin MauLoker</h1>
                     <p class="text-xs text-slate-400 max-w-lg leading-relaxed pt-1">
                         Kelola data lowongan kerja, validasi pengajuan verifikasi perusahaan, pantau iklan, serta sesuaikan opsi preferensi tema warna portal dari satu dashboard.
                     </p>
