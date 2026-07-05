@@ -1,2 +1,7 @@
 User-agent: *
-Disallow:
+Disallow: /candidate/
+Disallow: /company/
+Disallow: /admin/
+Disallow: /messages
+
+Sitemap: https://mauloker.com/sitemap.xml

@@ -61,3 +61,43 @@ Route::middleware('auth')->group(function () {
     })->name('logout');
 });
 
+// Dynamic XML Sitemap for SEO
+Route::get('/sitemap.xml', function() {
+    $jobs = \App\Models\Job::where('status', 'active')->latest()->get();
+    $blogs = \App\Models\Blog::where('status', 'published')->latest()->get();
+    
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>';
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+    
+    // Static URLs
+    $xml .= '<url><loc>' . url('/') . '</loc><changefreq>daily</changefreq><priority>1.0</priority></url>';
+    $xml .= '<url><loc>' . url('/jobs') . '</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>';
+    $xml .= '<url><loc>' . url('/blog') . '</loc><changefreq>daily</changefreq><priority>0.8</priority></url>';
+    
+    // Dynamic Jobs
+    foreach ($jobs as $job) {
+        $xml .= '<url>';
+        $xml .= '<loc>' . route('jobs.detail', $job->slug) . '</loc>';
+        $xml .= '<lastmod>' . ($job->updated_at ? $job->updated_at->toAtomString() : $job->created_at->toAtomString()) . '</lastmod>';
+        $xml .= '<changefreq>weekly</changefreq>';
+        $xml .= '<priority>0.8</priority>';
+        $xml .= '</url>';
+    }
+    
+    // Dynamic Blogs
+    foreach ($blogs as $blog) {
+        $xml .= '<url>';
+        $xml .= '<loc>' . route('blog.detail', $blog->slug) . '</loc>';
+        $xml .= '<lastmod>' . ($blog->updated_at ? $blog->updated_at->toAtomString() : $blog->created_at->toAtomString()) . '</lastmod>';
+        $xml .= '<changefreq>weekly</changefreq>';
+        $xml .= '<priority>0.7</priority>';
+        $xml .= '</url>';
+    }
+    
+    $xml .= '</urlset>';
+    
+    return response($xml, 200, [
+        'Content-Type' => 'application/xml'
+    ]);
+});
+
