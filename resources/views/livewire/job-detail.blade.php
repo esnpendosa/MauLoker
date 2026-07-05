@@ -63,6 +63,22 @@
                 <span>{{ $isSaved ? 'Tersimpan' : 'Simpan' }}</span>
             </button>
 
+            @if($job->company && $job->company->user_id)
+                @auth
+                    @if(auth()->id() !== $job->company->user_id)
+                        <a href="/messages?user_id={{ $job->company->user_id }}" class="px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-750 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-350 hover:bg-slate-100 text-sm font-bold transition flex items-center justify-center gap-2" wire:navigate>
+                            <i data-lucide="message-square" class="w-4 h-4 text-primary"></i>
+                            <span>Tanya Perekrut</span>
+                        </a>
+                    @endif
+                @else
+                    <a href="/login" class="px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-750 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-350 hover:bg-slate-100 text-sm font-bold transition flex items-center justify-center gap-2">
+                        <i data-lucide="message-square" class="w-4 h-4 text-primary"></i>
+                        <span>Tanya Perekrut</span>
+                    </a>
+                @endauth
+            @endif
+
             @if($hasApplied)
                 <button disabled class="w-full md:w-auto px-8 py-3.5 bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 font-bold rounded-2xl text-sm cursor-not-allowed flex items-center justify-center gap-1.5">
                     <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>

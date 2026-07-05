@@ -12,6 +12,14 @@ class Chat extends Component
     public $activeUserId = null;
     public $newMessageText = '';
 
+    public function mount()
+    {
+        $targetUserId = request()->query('user_id');
+        if ($targetUserId && $targetUserId != Auth::id()) {
+            $this->activeUserId = $targetUserId;
+        }
+    }
+
     public function selectConversation($userId)
     {
         $this->activeUserId = $userId;
@@ -52,6 +60,15 @@ class Chat extends Component
         $sentTo = Message::where('sender_id', $authId)->pluck('receiver_id')->toArray();
         $receivedFrom = Message::where('receiver_id', $authId)->pluck('sender_id')->toArray();
         $contactIds = array_unique(array_merge($sentTo, $receivedFrom));
+
+        if ($this->activeUserId && !in_array($this->activeUserId, $contactIds)) {
+            $targetUser = User::find($this->activeUserId);
+            if ($targetUser) {
+                $contactIds[] = $this->activeUserId;
+            } else {
+                $this->activeUserId = null;
+            }
+        }
 
         $contacts = User::whereIn('id', $contactIds)->get()->map(function($user) use ($authId) {
             // Count unread messages

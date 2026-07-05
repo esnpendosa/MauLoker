@@ -21,6 +21,7 @@ class Dashboard extends Component
     public $jobId = null;
     public $jobTitle = '';
     public $category_id = '';
+    public $new_category_name = '';
     public $description = '';
     public $requirements = '';
     public $skills_input = '';
@@ -100,7 +101,7 @@ class Dashboard extends Component
     public function resetJobForm()
     {
         $this->reset([
-            'jobId', 'jobTitle', 'category_id', 'description', 'requirements', 'skills_input',
+            'jobId', 'jobTitle', 'category_id', 'new_category_name', 'description', 'requirements', 'skills_input',
             'experience_years', 'education_level', 'employment_type', 'location_type',
             'city', 'salary_min', 'salary_max', 'benefits', 'is_featured', 'is_urgent'
         ]);
@@ -108,6 +109,29 @@ class Dashboard extends Component
 
     public function saveJob()
     {
+        if ($this->category_id === 'new') {
+            $this->validate([
+                'new_category_name' => 'required|min:3|max:50',
+            ], [
+                'new_category_name.required' => 'Nama kategori baru wajib diisi.',
+                'new_category_name.min' => 'Nama kategori baru minimal 3 karakter.',
+                'new_category_name.max' => 'Nama kategori baru maksimal 50 karakter.',
+            ]);
+
+            // Check if exists
+            $existing = JobCategory::where('name', 'like', trim($this->new_category_name))->first();
+            if ($existing) {
+                $this->category_id = $existing->id;
+            } else {
+                $newCat = JobCategory::create([
+                    'name' => trim($this->new_category_name),
+                    'slug' => Str::slug($this->new_category_name) . '-' . rand(100, 999),
+                    'status' => true,
+                ]);
+                $this->category_id = $newCat->id;
+            }
+        }
+
         $this->validate([
             'jobTitle' => 'required|min:5',
             'category_id' => 'required|exists:job_categories,id',

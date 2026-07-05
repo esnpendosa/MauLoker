@@ -20,9 +20,9 @@
     $currentPath = '/' . ltrim(request()->path(), '/');
     $seoPage = \App\Models\SeoPage::where('path_pattern', $currentPath)->first();
     
-    $metaTitle = $seoTitle ?? ($seoPage ? $seoPage->meta_title : ($settings['website_name'] ?? 'MauLoker') . ' - ' . ($settings['tagline'] ?? 'Temukan Pekerjaan Impianmu'));
-    $metaDesc = $seoDescription ?? ($seoPage ? $seoPage->meta_description : 'Platform pencarian kerja Indonesia terdepan, ringan, cepat, dan mobile-first.');
-    $ogImage = $seoImage ?? ($seoPage && $seoPage->og_image ? $seoPage->og_image : 'https://img.icons8.com/color/512/000000/find-matching-job.png');
+    $metaTitle = $seoTitle ?? ($seoPage ? $seoPage->meta_title : ($settings['website_name'] ?? 'MauLoker') . ' - ' . ($settings['tagline'] ?? 'Siap Cari Kerja? Jadikan Impianmu Kenyataan!'));
+    $metaDesc = $seoDescription ?? ($seoPage ? $seoPage->meta_description : 'Portal lowongan kerja profesional untuk masyarakat Indonesia. Siap Cari Kerja? Jadikan Impianmu kenyataan — 100% gratis, mudah, dan terpercaya.');
+    $ogImage = $seoImage ?? ($seoPage && $seoPage->og_image ? $seoPage->og_image : (!empty($settings['logo_url']) ? $settings['logo_url'] : url('/og-image.png')));
     $canonicalUrl = $seoCanonical ?? ($seoPage && $seoPage->canonical ? $seoPage->canonical : url()->current());
     
     $schemaType = $schemaType ?? ($seoPage ? $seoPage->schema_type : 'WebSite');
@@ -37,6 +37,16 @@
     }
 }" :class="{ 'dark': darkMode }">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JK7M5947NT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-JK7M5947NT');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -258,12 +268,26 @@
                                 <a href="/company/profile" class="flex items-center gap-2 px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition">
                                     <i data-lucide="building" class="w-4 h-4"></i> Profil Perusahaan
                                 </a>
+                                @php $unreadCount = \App\Models\Message::where('receiver_id', auth()->id())->whereNull('read_at')->count(); @endphp
+                                <a href="/messages" class="flex items-center justify-between gap-2 px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                                    <span class="flex items-center gap-2"><i data-lucide="message-square" class="w-4 h-4"></i> Pesan</span>
+                                    @if($unreadCount > 0)
+                                        <span class="px-1.5 py-0.5 rounded-full bg-primary text-white text-[9px] font-bold">{{ $unreadCount }}</span>
+                                    @endif
+                                </a>
                             @else
                                 <a href="/candidate/dashboard" class="flex items-center gap-2 px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition">
                                     <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dasbor
                                 </a>
                                 <a href="/candidate/profile" class="flex items-center gap-2 px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition">
                                     <i data-lucide="user" class="w-4 h-4"></i> Profil Saya
+                                </a>
+                                @php $unreadCount = \App\Models\Message::where('receiver_id', auth()->id())->whereNull('read_at')->count(); @endphp
+                                <a href="/messages" class="flex items-center justify-between gap-2 px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                                    <span class="flex items-center gap-2"><i data-lucide="message-square" class="w-4 h-4"></i> Pesan</span>
+                                    @if($unreadCount > 0)
+                                        <span class="px-1.5 py-0.5 rounded-full bg-primary text-white text-[9px] font-bold">{{ $unreadCount }}</span>
+                                    @endif
                                 </a>
                             @endif
 
@@ -345,12 +369,26 @@
                         <a href="/company/profile" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-base font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition" @click="mobileMenuOpen = false">
                             <i data-lucide="building" class="w-5 h-5 text-slate-400"></i> Profil Perusahaan
                         </a>
+                        @php $mobileUnread = \App\Models\Message::where('receiver_id', auth()->id())->whereNull('read_at')->count(); @endphp
+                        <a href="/messages" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-base font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition" @click="mobileMenuOpen = false">
+                            <span class="flex items-center gap-2.5"><i data-lucide="message-square" class="w-5 h-5 text-primary"></i> Pesan</span>
+                            @if($mobileUnread > 0)
+                                <span class="px-2 py-0.5 rounded-full bg-primary text-white text-[10px] font-bold">{{ $mobileUnread }}</span>
+                            @endif
+                        </a>
                     @else
                         <a href="/candidate/dashboard" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-base font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition" @click="mobileMenuOpen = false">
                             <i data-lucide="layout-dashboard" class="w-5 h-5 text-slate-400"></i> Dasbor
                         </a>
                         <a href="/candidate/profile" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-base font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition" @click="mobileMenuOpen = false">
                             <i data-lucide="user" class="w-5 h-5 text-slate-400"></i> Profil Saya
+                        </a>
+                        @php $mobileUnread = \App\Models\Message::where('receiver_id', auth()->id())->whereNull('read_at')->count(); @endphp
+                        <a href="/messages" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-base font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition" @click="mobileMenuOpen = false">
+                            <span class="flex items-center gap-2.5"><i data-lucide="message-square" class="w-5 h-5 text-primary"></i> Pesan</span>
+                            @if($mobileUnread > 0)
+                                <span class="px-2 py-0.5 rounded-full bg-primary text-white text-[10px] font-bold">{{ $mobileUnread }}</span>
+                            @endif
                         </a>
                     @endif
 
@@ -391,24 +429,28 @@
                     </span>
                 </div>
                 <p class="text-sm text-slate-500 dark:text-slate-400 max-w-sm">
-                    MauLoker adalah portal lowongan kerja profesional yang berkomitmen pada praktik rekrutmen yang legal dan etis. Menghubungkan pencari kerja dengan pemberi kerja tepercaya di seluruh Indonesia.
+                    Jadikan <strong class="text-slate-700 dark:text-slate-200">Impianmu</strong> kenyataan — MauLoker adalah portal lowongan kerja profesional yang berkomitmen pada praktik rekrutmen yang legal dan etis. Menghubungkan pencari kerja dengan pemberi kerja tepercaya di seluruh Indonesia.
                 </p>
                 <div class="mt-4 flex items-center gap-3">
-                    <a href="#" class="text-slate-400 hover:text-primary transition" aria-label="Facebook">
+                    {{-- Facebook --}}
+                    <a href="https://www.facebook.com/profile.php?id=61591256351206" target="_blank" rel="noopener" class="text-slate-400 hover:text-primary transition" aria-label="Facebook">
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M9 8H7v3h2v9h3v-9h3l.5-3H12V6.5C12 5.67 12.5 5 13.5 5H15V2h-2.5C10.01 2 8 4.01 8 6.5V8z"/></svg>
                     </a>
-                    <a href="#" class="text-slate-400 hover:text-primary transition" aria-label="Instagram">
+                    {{-- Instagram --}}
+                    <a href="https://www.instagram.com/mauloker.comm?igsh=ZzFxcndwZnV4a3Ix" target="_blank" rel="noopener" class="text-slate-400 hover:text-primary transition" aria-label="Instagram">
                         <svg class="w-5 h-5 stroke-current fill-none" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
                     </a>
-                    <a href="#" class="text-slate-400 hover:text-primary transition" aria-label="Twitter">
-                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+                    {{-- TikTok --}}
+                    <a href="https://www.tiktok.com/@mauloker.com" target="_blank" rel="noopener" class="text-slate-400 hover:text-primary transition" aria-label="TikTok">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.77a4.85 4.85 0 0 1-1.01-.08z"/></svg>
                     </a>
-                    <a href="#" class="text-slate-400 hover:text-primary transition" aria-label="LinkedIn">
-                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+                    {{-- Threads --}}
+                    <a href="https://www.threads.com/@mauloker_com" target="_blank" rel="noopener" class="text-slate-400 hover:text-primary transition" aria-label="Threads">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.473 12.01v-.017c.027-3.579.877-6.43 2.522-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.594 12c.022 3.089.713 5.5 2.053 7.166 1.43 1.783 3.631 2.698 6.542 2.717 2.61-.02 4.323-.65 5.498-2.051.79-.932 1.208-2.07 1.226-3.4.017-1.325-.403-2.358-1.248-3.076-.564-.483-1.275-.773-2.122-.866-.143 1.012-.435 1.886-.885 2.607-.64 1.02-1.515 1.627-2.61 1.806-.887.144-1.74-.022-2.49-.49-.98-.62-1.55-1.643-1.62-2.892-.074-1.303.395-2.43 1.32-3.175.9-.726 2.154-1.11 3.733-1.14.46-.008.91.01 1.34.055-.043-.327-.128-.622-.257-.883-.324-.657-.889-1.01-1.68-1.05-.672-.035-1.268.152-1.777.557l-.96-1.638c.83-.618 1.834-.937 2.992-.95 1.664.04 2.896.68 3.662 1.9.48.762.746 1.7.793 2.794.245.048.485.107.718.175 1.254.366 2.238 1.062 2.923 2.07.662.977.995 2.168.992 3.54-.002 1.727-.512 3.256-1.523 4.446-1.38 1.617-3.462 2.437-6.19 2.455zM12.1 13.27c-.926.025-1.618.214-2.06.559-.407.32-.594.783-.556 1.373.045.763.403 1.227.998 1.564.466.27.984.303 1.53.097.78-.292 1.249-.9 1.435-1.859.077-.39.117-.82.12-1.286a12.45 12.45 0 0 0-1.468-.448z"/></svg>
                     </a>
                 </div>
             </div>
-            
+
             <div>
                 <h5 class="font-bold text-sm text-slate-900 dark:text-white mb-4 uppercase tracking-wider">Jelajahi</h5>
                 <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
@@ -435,7 +477,7 @@
                 <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
                     <li class="flex items-center gap-2">
                         <i data-lucide="phone" class="w-4 h-4 text-primary"></i>
-                        <span>{{ $settings['contact_whatsapp'] ?? '+6285730302827' }}</span>
+                        <span>{{ $settings['contact_whatsapp'] ?? '+6285842895018' }}</span>
                     </li>
                     <li class="flex items-center gap-2">
                         <i data-lucide="mail" class="w-4 h-4 text-primary"></i>
@@ -444,9 +486,11 @@
                 </ul>
             </div>
         </div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 dark:border-slate-800 mt-8 pt-8 text-center text-xs text-slate-500">
+
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 dark:border-slate-800 mt-8 pt-6 text-center text-xs text-slate-500">
             <p class="text-[10px] text-slate-400 dark:text-slate-500 max-w-4xl mx-auto leading-relaxed">
-                &copy; {{ date('Y') }} <strong>MauLoker</strong>. Platform komunitas lowongan kerja independen dan non-komersial. MauLoker bukan perusahaan penyalur tenaga kerja maupun agen rekrutmen resmi. Seluruh proses perekrutan, komunikasi, dan hubungan kerja sepenuhnya merupakan tanggung jawab pengguna masing-masing. Pengguna diwajibkan melakukan verifikasi mandiri terhadap setiap informasi lowongan kerja dan pihak perekrut sesuai peraturan perundang-undangan Republik Indonesia.
+                &copy; 2026 <strong>MauLoker</strong>. Portal Lowongan Kerja untuk Indonesia.
             </p>
         </div>
     </footer>

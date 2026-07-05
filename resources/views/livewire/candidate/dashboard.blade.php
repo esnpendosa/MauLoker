@@ -34,7 +34,9 @@
                         'cv_builder' => ['label' => 'CV ATS & Analyzer', 'icon' => 'file-text'],
                         'applications' => ['label' => 'Lacak Lamaran', 'icon' => 'check-square'],
                         'saved_jobs' => ['label' => 'Lowongan Disimpan', 'icon' => 'bookmark'],
+                        'messages' => ['label' => 'Pesan', 'icon' => 'message-square'],
                     ];
+                    $unreadMessages = \App\Models\Message::where('receiver_id', auth()->id())->whereNull('read_at')->count();
                 @endphp
                 @foreach($candidateMenu as $key => $labelItem)
                     <button wire:click="$set('activeTab', '{{ $key }}')" 
@@ -44,7 +46,10 @@
                             : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-slate-900 dark:hover:text-white' 
                         }}">
                         <i data-lucide="{{ $labelItem['icon'] }}" class="w-4.5 h-4.5 shrink-0 transition {{ $activeTab === $key ? 'text-primary' : 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300' }}"></i>
-                        <span>{{ $labelItem['label'] }}</span>
+                        <span class="flex-1">{{ $labelItem['label'] }}</span>
+                        @if($key === 'messages' && $unreadMessages > 0)
+                            <span class="px-1.5 py-0.5 rounded-full bg-primary text-white text-[9px] font-bold shrink-0">{{ $unreadMessages }}</span>
+                        @endif
                     </button>
                 @endforeach
             </nav>
@@ -466,6 +471,39 @@
                                 </a>
                             </div>
                         @endforelse
+                    </div>
+                </div>
+            @endif
+
+            {{-- Tab: Messages --}}
+            @if($activeTab === 'messages')
+                <div class="bg-white dark:bg-darkCard p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+                    <div class="border-b border-slate-100 dark:border-slate-800 pb-4">
+                        <h2 class="text-lg font-bold text-slate-900 dark:text-white">Kotak Pesan</h2>
+                        <p class="text-xs text-slate-400">Berkomunikasi langsung dengan perekrut dan perusahaan yang telah menghubungi Anda.</p>
+                    </div>
+
+                    <div class="flex flex-col items-center justify-center py-10 gap-5 text-center">
+                        <div class="w-20 h-20 rounded-3xl bg-primary/10 text-primary flex items-center justify-center shadow-sm">
+                            <i data-lucide="message-square" class="w-10 h-10"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="font-bold text-slate-900 dark:text-white">Buka Halaman Chat Penuh</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed">
+                                Gunakan fitur chat real-time MauLoker untuk berkirim pesan langsung dengan perekrut atau perusahaan yang melamarkan pekerjaan kepada Anda.
+                            </p>
+                        </div>
+                        @php $unread = \App\Models\Message::where('receiver_id', auth()->id())->whereNull('read_at')->count(); @endphp
+                        @if($unread > 0)
+                            <div class="px-4 py-2 rounded-xl bg-primary/10 border border-primary/20 text-xs font-bold text-primary">
+                                <i data-lucide="bell" class="w-3.5 h-3.5 inline mr-1"></i>
+                                Anda memiliki {{ $unread }} pesan belum dibaca
+                            </div>
+                        @endif
+                        <a href="/messages" class="inline-flex items-center gap-2 px-8 py-3 bg-primary hover:bg-primary-hover text-white font-extrabold rounded-2xl text-sm transition shadow-lg shadow-primary/20" wire:navigate>
+                            <i data-lucide="message-square" class="w-4 h-4"></i>
+                            Buka Chat Sekarang
+                        </a>
                     </div>
                 </div>
             @endif

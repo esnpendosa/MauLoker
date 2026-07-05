@@ -385,6 +385,21 @@
                                                     </p>
                                                 </div>
                                             @endif
+
+                                            {{-- Chat Action --}}
+                                            <div class="mt-5 pt-4 border-t border-slate-200/50 dark:border-slate-850 flex flex-wrap gap-3 items-center">
+                                                <a href="/messages?user_id={{ $applicant->candidate->id }}" 
+                                                   class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-extrabold rounded-xl transition shadow-md shadow-primary/20"
+                                                   wire:navigate>
+                                                    <i data-lucide="message-square" class="w-4 h-4"></i>
+                                                    Hubungi Pelamar via Chat
+                                                </a>
+                                                <a href="mailto:{{ $applicant->candidate->email }}" 
+                                                   class="inline-flex items-center gap-2 px-5 py-2.5 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-bold rounded-xl transition">
+                                                    <i data-lucide="mail" class="w-4 h-4"></i>
+                                                    Kirim Email
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endif
@@ -520,13 +535,22 @@
                         <!-- Category -->
                         <div class="space-y-1">
                             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Kategori Karir</label>
-                            <select wire:model="category_id" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary">
+                            <select wire:model.live="category_id" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary">
                                 <option value="">Pilih Kategori</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
+                                <option value="new" class="text-primary font-bold text-emerald-600 dark:text-emerald-400">+ Tambah Kategori Baru</option>
                             </select>
                             @error('category_id') <span class="text-xs text-rose-500">{{ $message }}</span> @enderror
+
+                            @if($category_id === 'new')
+                                <div class="mt-2 space-y-1 animate-fadeIn">
+                                    <label class="text-[9px] font-bold text-primary dark:text-emerald-400 uppercase tracking-wider block">Nama Kategori Baru</label>
+                                    <input type="text" wire:model="new_category_name" placeholder="Tulis nama kategori baru..." class="w-full bg-slate-50 dark:bg-slate-900 border border-primary/40 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary">
+                                    @error('new_category_name') <span class="text-xs text-rose-500">{{ $message }}</span> @enderror
+                                </div>
+                            @endif
                         </div>
                     </div>
 
